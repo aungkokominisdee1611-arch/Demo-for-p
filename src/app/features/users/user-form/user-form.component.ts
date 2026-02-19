@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductCreate } from '../../../models/product.model';
+import { ProductCreateUpdate } from '../../../models/product.model';
 import { ProductService } from '../../../services/product.service';
 
 @Component({
@@ -10,11 +10,11 @@ import { ProductService } from '../../../services/product.service';
   styleUrls: ['./user-form.component.css'],
 })
 export class UserFormComponent implements OnInit {
-  title = '';
+  name = '';
   price: number | null = null;
   category = '';
-  description = '';
-  image = '';
+  isDiscount = false;
+  stock = 0;
   isEdit = false;
   errorMessage: string | null = null;
   submitting = false;
@@ -31,30 +31,30 @@ export class UserFormComponent implements OnInit {
     if (id) {
       this.productId = +id;
       this.isEdit = true;
-      this.productService.getProductByIdFunction(this.productId).subscribe({
-        next: (product) => {
-          this.title = product.title;
+      this.productService.getProductByIdFunction(this.productId).subscribe(
+        (product) => {
+          this.name = product.name;
           this.price = product.price;
           this.category = product.category;
-          this.description = product.description;
-          this.image = product.image;
+          this.isDiscount = product.isDiscount;
+          this.stock = product.stock ?? 0;
         },
-        error: (err) => console.error('Load product failed', err),
-      });
+        (err) => console.error('Load product failed', err)
+      );
     }
   }
 
   onSubmit() {
     const p = this.price ?? 0;
-    if (!this.title.trim()) return;
+    if (!this.name.trim()) return;
     this.errorMessage = null;
     this.submitting = true;
-    const body: ProductCreate = {
-      title: this.title.trim(),
+    const body: ProductCreateUpdate = {
+      name: this.name.trim(),
       price: p,
       category: this.category.trim() || 'general',
-      description: this.description.trim(),
-      image: this.image.trim() || 'https://via.placeholder.com/300',
+      isDiscount: this.isDiscount,
+      stock: this.stock,
     };
     const nav = () => {
       this.submitting = false;

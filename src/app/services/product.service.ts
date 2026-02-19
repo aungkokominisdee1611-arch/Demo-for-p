@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Product, ProductCreateUpdate } from '../models/product.model';
 import { ServiceUrl } from 'src/assets/app.config';
-import { Product } from '../models/product.model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ProductService {
   private readonly products = ServiceUrl.products;
   private readonly create = ServiceUrl.create;
@@ -22,11 +20,11 @@ export class ProductService {
     return this._http.get<Product>(`${this.products}/${params}`);
   }
 
-  createProductFunction(body: any) {
+  createProductFunction(body: ProductCreateUpdate) {
     return this._http.post<Product>(this.create, body);
   }
 
-  updateProductFunction(params: any, body: any) {
+  updateProductFunction(params: any, body: ProductCreateUpdate) {
     return this._http.put<Product>(`${this.edit}/${params}`, body);
   }
 

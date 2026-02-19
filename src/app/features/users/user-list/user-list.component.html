@@ -63,21 +63,9 @@
           <tr class="bg-theme-surface/80">
             <th
               scope="col"
-              class="products-table__th products-table__th--img text-theme-muted"
-            >
-              Product
-            </th>
-            <th
-              scope="col"
               class="products-table__th products-table__th--name text-theme-muted"
             >
               Name
-            </th>
-            <th
-              scope="col"
-              class="products-table__th products-table__th--desc text-theme-muted"
-            >
-              Description
             </th>
             <th
               scope="col"
@@ -93,6 +81,12 @@
             </th>
             <th
               scope="col"
+              class="products-table__th products-table__th--stock text-theme-muted"
+            >
+              Stock
+            </th>
+            <th
+              scope="col"
               class="products-table__th products-table__th--actions text-theme-muted"
             >
               Actions
@@ -104,24 +98,8 @@
             *ngFor="let product of paginatedProducts"
             class="transition-colors hover:bg-electric-cyan/5"
           >
-            <td class="products-table__td products-table__td--img">
-              <div class="flex items-center gap-3">
-                <img
-                  [src]="product.image"
-                  [alt]="product.title"
-                  class="h-20 w-20 shrink-0 rounded-xl object-cover ring-2 ring-electric-cyan/20"
-                />
-              </div>
-            </td>
             <td class="products-table__td products-table__td--name">
-              <span class="font-medium text-theme-cream">{{
-                product.title
-              }}</span>
-            </td>
-            <td class="products-table__td products-table__td--desc">
-              <span class="product-desc text-theme-cream">{{
-                product.description
-              }}</span>
+              <span class="font-medium text-theme-cream">{{ product.name }}</span>
             </td>
             <td class="products-table__td products-table__td--cat">
               <span
@@ -131,9 +109,10 @@
               </span>
             </td>
             <td class="products-table__td products-table__td--price">
-              <span class="text-lg font-semibold text-kiwi"
-                >${{ product.price }}</span
-              >
+              <span class="text-lg font-semibold text-kiwi">${{ product.price }}</span>
+            </td>
+            <td class="products-table__td products-table__td--stock">
+              <span class="text-theme-cream">{{ product.stock }}</span>
             </td>
             <td class="products-table__td products-table__td--actions">
               <div class="flex justify-end gap-2">
@@ -162,7 +141,7 @@
             </td>
           </tr>
           <tr *ngIf="filteredProducts.length === 0">
-            <td colspan="6" class="products-table__td px-8 py-12 text-center">
+            <td colspan="5" class="products-table__td px-8 py-12 text-center">
               <p class="text-theme-muted">
                 {{
                   categoryFilter

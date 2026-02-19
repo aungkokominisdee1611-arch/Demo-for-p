@@ -12,12 +12,12 @@
     <form (ngSubmit)="onSubmit()" class="mt-8 rounded-2xl border border-electric-cyan/20 bg-theme-card/80 p-6 shadow-lg sm:p-8">
       <div class="space-y-6">
         <div>
-          <label for="title" class="block text-sm font-semibold text-theme-cream">Title</label>
+          <label for="name" class="block text-sm font-semibold text-theme-cream">Name</label>
           <input
-            id="title"
+            id="name"
             type="text"
-            [(ngModel)]="title"
-            name="title"
+            [(ngModel)]="name"
+            name="name"
             required
             placeholder="Product name"
             class="mt-2 block w-full rounded-xl border border-electric-cyan/30 bg-theme-surface px-4 py-3 text-theme-cream placeholder-theme-muted focus:border-kiwi focus:outline-none focus:ring-2 focus:ring-kiwi/50"
@@ -43,38 +43,31 @@
             type="text"
             [(ngModel)]="category"
             name="category"
-            placeholder="e.g. electronics, clothing"
+            placeholder="e.g. Electronics, Clothing"
             class="mt-2 block w-full rounded-xl border border-electric-cyan/30 bg-theme-surface px-4 py-3 text-theme-cream placeholder-theme-muted focus:border-kiwi focus:outline-none focus:ring-2 focus:ring-kiwi/50"
           />
         </div>
         <div>
-          <label for="description" class="block text-sm font-semibold text-theme-cream">Description</label>
-          <textarea
-            id="description"
-            [(ngModel)]="description"
-            name="description"
-            rows="3"
-            placeholder="Product description"
-            class="mt-2 block w-full rounded-xl border border-electric-cyan/30 bg-theme-surface px-4 py-3 text-theme-cream placeholder-theme-muted focus:border-kiwi focus:outline-none focus:ring-2 focus:ring-kiwi/50"
-          ></textarea>
-        </div>
-        <div>
-          <label for="image" class="block text-sm font-semibold text-theme-cream">Image URL</label>
+          <label for="stock" class="block text-sm font-semibold text-theme-cream">Stock</label>
           <input
-            id="image"
-            type="url"
-            [(ngModel)]="image"
-            name="image"
-            placeholder="https://example.com/image.jpg"
+            id="stock"
+            type="number"
+            [(ngModel)]="stock"
+            name="stock"
+            min="0"
+            placeholder="0"
             class="mt-2 block w-full rounded-xl border border-electric-cyan/30 bg-theme-surface px-4 py-3 text-theme-cream placeholder-theme-muted focus:border-kiwi focus:outline-none focus:ring-2 focus:ring-kiwi/50"
           />
-          <img
-            *ngIf="image"
-            [src]="image"
-            alt="Preview"
-            class="mt-3 h-28 w-28 rounded-xl object-cover border-2 border-electric-cyan/20"
-            onerror="this.style.display='none'"
+        </div>
+        <div class="flex items-center gap-3">
+          <input
+            id="isDiscount"
+            type="checkbox"
+            [(ngModel)]="isDiscount"
+            name="isDiscount"
+            class="h-4 w-4 rounded border-electric-cyan/30 text-kiwi focus:ring-kiwi"
           />
+          <label for="isDiscount" class="text-sm font-semibold text-theme-cream">On discount</label>
         </div>
       </div>
       <div class="mt-8 flex gap-3">

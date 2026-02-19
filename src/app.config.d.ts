@@ -1,7 +1,7 @@
 declare module 'src/assets/app.config' {
   export const ServiceUrl: {
-    create: string;
     products: string;
+    create: string;
     edit: string;
     delete: string;
   };

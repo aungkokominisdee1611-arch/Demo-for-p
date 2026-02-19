@@ -21,10 +21,10 @@ export class UserDetailComponent implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.productService.getProductByIdFunction(+id).subscribe({
-        next: (data) => (this.product = data),
-        error: () => (this.product = null),
-      });
+      this.productService.getProductByIdFunction(+id).subscribe(
+        (data) => (this.product = data),
+        () => (this.product = null)
+      );
     }
   }
 

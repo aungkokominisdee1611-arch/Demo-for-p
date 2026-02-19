@@ -1,10 +1,16 @@
 export interface Product {
   id: number;
-  title: string;
+  name: string;
   price: number;
-  description: string;
   category: string;
-  image: string;
+  isDiscount: boolean;
+  stock: number;
 }
 
-export type ProductCreate = Omit<Product, 'id'>;
+export interface ProductCreateUpdate {
+  name: string;
+  price: number;
+  category: string;
+  isDiscount: boolean;
+  stock: number;
+}

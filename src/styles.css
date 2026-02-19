@@ -3,5 +3,12 @@
 @tailwind utilities;
 
 body {
-  @apply antialiased;
+  @apply antialiased text-theme-cream;
+  background: linear-gradient(160deg, #0F172A 0%, #1E3A5F 50%, #0F172A 100%);
+  min-height: 100vh;
+}
+
+/* Focus ring uses kiwi green */
+*:focus-visible {
+  @apply outline-none ring-2 ring-kiwi ring-offset-2 ring-offset-theme-bg;
 }

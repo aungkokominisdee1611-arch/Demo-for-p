@@ -1,3 +1,9 @@
 :host {
   display: block;
 }
+
+.sidebar-active {
+  background: linear-gradient(90deg, rgba(34, 211, 238, 0.15) 0%, transparent 100%);
+  color: #22D3EE;
+  border-left: 3px solid #9FE870;
+}

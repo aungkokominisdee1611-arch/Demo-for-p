@@ -1,110 +1,239 @@
-<div class="p-8">
-  <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+<div class="p-6 sm:p-8">
+  <header
+    class="mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-electric-cyan/20 pb-6"
+  >
     <div>
-      <h1 class="text-3xl font-bold tracking-tight text-slate-900">Users</h1>
-      <p class="mt-1 text-slate-600">Manage your users</p>
+      <h1
+        class="font-display text-3xl font-bold tracking-tight text-kiwi sm:text-4xl"
+      >
+        Products
+      </h1>
+      <p class="mt-1 text-theme-muted">Browse and manage your catalog</p>
     </div>
     <button
       type="button"
       (click)="onAdd()"
-      class="inline-flex items-center gap-2 rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+      class="rounded-xl border-2 border-kiwi bg-kiwi/10 px-5 py-2.5 text-sm font-semibold text-kiwi transition-all hover:bg-kiwi/20 hover:shadow-glow-kiwi focus:outline-none focus:ring-2 focus:ring-kiwi focus:ring-offset-2 focus:ring-offset-theme-bg"
     >
-      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-      </svg>
-      Add User
+      + Add Product
     </button>
+  </header>
+
+  <!-- Category filter -->
+  <div class="mb-6 flex flex-wrap items-center gap-3">
+    <span class="text-sm font-medium text-theme-muted">Category:</span>
+    <button
+      type="button"
+      (click)="clearCategoryFilter()"
+      class="rounded-lg border px-3 py-1.5 text-sm font-medium transition-all"
+      [ngClass]="
+        !categoryFilter
+          ? 'border-kiwi bg-kiwi/20 text-kiwi'
+          : 'border-electric-cyan/30 text-theme-muted hover:bg-electric-cyan/10 hover:text-electric-cyan'
+      "
+    >
+      All
+    </button>
+    <button
+      *ngFor="let cat of categories"
+      type="button"
+      (click)="setCategoryFilter(cat)"
+      class="rounded-lg border px-3 py-1.5 text-sm font-medium transition-all capitalize"
+      [ngClass]="
+        categoryFilter === cat
+          ? 'border-kiwi bg-kiwi/20 text-kiwi'
+          : 'border-electric-cyan/30 text-theme-muted hover:bg-electric-cyan/10 hover:text-electric-cyan'
+      "
+    >
+      {{ cat }}
+    </button>
+    <span *ngIf="categoryFilter" class="ml-2 text-sm text-theme-muted">
+      ({{ filteredProducts.length }}
+      {{ filteredProducts.length === 1 ? "result" : "results" }})
+    </span>
   </div>
-  <div class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-card">
-    <table class="min-w-full divide-y divide-slate-100">
-      <thead>
-        <tr class="bg-slate-50/80">
-          <th scope="col" class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Name</th>
-          <th scope="col" class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Email</th>
-          <th scope="col" class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Role</th>
-          <th scope="col" class="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Actions</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-slate-100">
-        <tr *ngFor="let user of users" class="transition-colors hover:bg-slate-50/50">
-          <td class="whitespace-nowrap px-6 py-4">
-            <div class="flex items-center gap-3">
-              <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-100 text-sm font-semibold text-primary-700">
-                {{ user.name.charAt(0) }}
-              </div>
-              <span class="font-medium text-slate-900">{{ user.name }}</span>
-            </div>
-          </td>
-          <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">{{ user.email }}</td>
-          <td class="whitespace-nowrap px-6 py-4">
-            <span
-              class="inline-flex rounded-full px-3 py-1 text-xs font-medium"
-              [ngClass]="{
-                'bg-primary-100 text-primary-700': user.role === 'Admin',
-                'bg-amber-100 text-amber-700': user.role === 'Editor',
-                'bg-slate-100 text-slate-700': user.role === 'User'
-              }"
+
+  <!-- Table -->
+  <div
+    class="overflow-hidden rounded-2xl border border-electric-cyan/10 bg-theme-card/50 shadow-lg"
+  >
+    <div class="overflow-x-auto">
+      <table class="products-table min-w-full divide-y divide-electric-cyan/10">
+        <thead>
+          <tr class="bg-theme-surface/80">
+            <th
+              scope="col"
+              class="products-table__th products-table__th--img text-theme-muted"
             >
-              {{ user.role }}
-            </span>
-          </td>
-          <td class="whitespace-nowrap px-6 py-4 text-right">
-            <div class="flex justify-end gap-1">
-              <button
-                type="button"
-                (click)="onView(user.id)"
-                class="rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-primary-600"
-                title="View"
-              >
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                (click)="onEdit(user.id)"
-                class="rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-primary-600"
-                title="Edit"
-              >
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                (click)="onDelete(user.id)"
-                class="rounded-lg p-2 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                title="Delete"
-              >
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-              </button>
-            </div>
-          </td>
-        </tr>
-        <tr *ngIf="users.length === 0">
-          <td colspan="4" class="px-6 py-16 text-center">
-            <div class="mx-auto max-w-sm">
-              <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-slate-400">
-                <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
+              Product
+            </th>
+            <th
+              scope="col"
+              class="products-table__th products-table__th--name text-theme-muted"
+            >
+              Name
+            </th>
+            <th
+              scope="col"
+              class="products-table__th products-table__th--desc text-theme-muted"
+            >
+              Description
+            </th>
+            <th
+              scope="col"
+              class="products-table__th products-table__th--cat text-theme-muted"
+            >
+              Category
+            </th>
+            <th
+              scope="col"
+              class="products-table__th products-table__th--price text-theme-muted"
+            >
+              Price
+            </th>
+            <th
+              scope="col"
+              class="products-table__th products-table__th--actions text-theme-muted"
+            >
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-electric-cyan/10">
+          <tr
+            *ngFor="let product of paginatedProducts"
+            class="transition-colors hover:bg-electric-cyan/5"
+          >
+            <td class="products-table__td products-table__td--img">
+              <div class="flex items-center gap-3">
+                <img
+                  [src]="product.image"
+                  [alt]="product.title"
+                  class="h-20 w-20 shrink-0 rounded-xl object-cover ring-2 ring-electric-cyan/20"
+                />
               </div>
-              <p class="mt-4 font-medium text-slate-900">No users yet</p>
-              <p class="mt-1 text-sm text-slate-500">Get started by adding your first user.</p>
+            </td>
+            <td class="products-table__td products-table__td--name">
+              <span class="font-medium text-theme-cream">{{
+                product.title
+              }}</span>
+            </td>
+            <td class="products-table__td products-table__td--desc">
+              <span class="product-desc text-theme-cream">{{
+                product.description
+              }}</span>
+            </td>
+            <td class="products-table__td products-table__td--cat">
+              <span
+                class="inline-block rounded-lg bg-electric-cyan/20 px-2.5 py-1 text-xs font-medium text-electric-cyan capitalize"
+              >
+                {{ product.category }}
+              </span>
+            </td>
+            <td class="products-table__td products-table__td--price">
+              <span class="text-lg font-semibold text-kiwi"
+                >${{ product.price }}</span
+              >
+            </td>
+            <td class="products-table__td products-table__td--actions">
+              <div class="flex justify-end gap-2">
+                <button
+                  type="button"
+                  (click)="onView(product.id)"
+                  class="rounded-lg bg-electric-cyan/20 px-3 py-1.5 text-sm font-medium text-electric-cyan transition-colors hover:bg-electric-cyan/30"
+                >
+                  View
+                </button>
+                <button
+                  type="button"
+                  (click)="onEdit(product.id)"
+                  class="rounded-lg bg-kiwi/20 px-3 py-1.5 text-sm font-medium text-kiwi transition-colors hover:bg-kiwi/30"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  (click)="onDelete(product.id)"
+                  class="rounded-lg bg-red-500/20 px-3 py-1.5 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/30"
+                >
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="filteredProducts.length === 0">
+            <td colspan="6" class="products-table__td px-8 py-12 text-center">
+              <p class="text-theme-muted">
+                {{
+                  categoryFilter
+                    ? "No products in this category."
+                    : "No products yet. Add one to get started."
+                }}
+              </p>
               <button
+                *ngIf="!categoryFilter"
                 type="button"
                 (click)="onAdd()"
-                class="mt-4 rounded-xl bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700"
+                class="mt-4 rounded-xl border-2 border-kiwi bg-kiwi/10 px-5 py-2.5 font-medium text-kiwi hover:bg-kiwi/20"
               >
-                Add User
+                Add Product
               </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+              <button
+                *ngIf="categoryFilter"
+                type="button"
+                (click)="clearCategoryFilter()"
+                class="mt-4 rounded-xl border border-electric-cyan/30 px-4 py-2 text-sm font-medium text-electric-cyan hover:bg-electric-cyan/10"
+              >
+                Clear filter
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
+
+  <!-- Pagination -->
+  <footer
+    *ngIf="filteredProducts.length > pageSize"
+    class="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-electric-cyan/20 bg-theme-card/80 px-6 py-4"
+  >
+    <p class="text-sm text-theme-muted">
+      Showing {{ rangeStart }}–{{ rangeEnd }} of
+      {{ filteredProducts.length }} products
+    </p>
+    <div class="flex items-center gap-2">
+      <button
+        type="button"
+        (click)="prevPage()"
+        [disabled]="currentPage === 1"
+        class="rounded-lg border border-electric-cyan/30 bg-theme-surface px-4 py-2 text-sm font-medium text-theme-cream transition-colors hover:bg-electric-cyan/10 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        ← Previous
+      </button>
+      <span class="flex items-center gap-1">
+        <button
+          *ngFor="let p of pageNumbers"
+          type="button"
+          (click)="goToPage(p)"
+          class="min-w-[2.5rem] rounded-lg border px-3 py-2 text-sm font-medium transition-all"
+          [ngClass]="
+            p === currentPage
+              ? 'border-kiwi bg-kiwi/20 text-kiwi'
+              : 'border-electric-cyan/30 text-theme-muted hover:bg-electric-cyan/10'
+          "
+        >
+          {{ p }}
+        </button>
+      </span>
+      <button
+        type="button"
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages"
+        class="rounded-lg border border-electric-cyan/30 bg-theme-surface px-4 py-2 text-sm font-medium text-theme-cream transition-colors hover:bg-electric-cyan/10 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        Next →
+      </button>
+    </div>
+  </footer>
 </div>

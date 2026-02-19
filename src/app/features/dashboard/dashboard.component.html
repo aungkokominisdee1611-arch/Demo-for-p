@@ -1,26 +1,79 @@
-<div class="p-8">
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold tracking-tight text-slate-900">Dashboard</h1>
-    <p class="mt-1 text-slate-600">Welcome back. Manage your users from the sidebar.</p>
+<div class="p-6 sm:p-8">
+  <header class="mb-8">
+    <h1 class="font-display text-3xl font-bold tracking-tight text-kiwi sm:text-4xl">Dashboard</h1>
+    <p class="mt-1 text-theme-muted">Welcome. Manage your products from the sidebar.</p>
+  </header>
+
+  <!-- Products count card -->
+  <div class="mb-10 rounded-2xl border border-electric-cyan/20 bg-theme-card/90 px-6 py-8 shadow-lg sm:px-8">
+    <div class="flex flex-wrap items-center justify-between gap-6">
+      <div class="flex items-center gap-5">
+        <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-kiwi/30 to-electric-cyan/30">
+          <svg class="h-9 w-9 text-kiwi" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm font-medium uppercase tracking-wider text-theme-muted">Total products</p>
+          <p *ngIf="loading" class="mt-1 text-2xl font-bold text-theme-cream">…</p>
+          <p *ngIf="!loading" class="mt-1 text-3xl font-bold text-electric-cyan sm:text-4xl">{{ productsCount }}</p>
+        </div>
+      </div>
+      <div class="h-12 w-px bg-electric-cyan/20 hidden sm:block" aria-hidden="true"></div>
+      <p *ngIf="!loading" class="text-sm text-theme-muted">
+        {{ productsCount === 1 ? '1 product' : productsCount + ' products' }} in your catalog
+      </p>
+    </div>
   </div>
-  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-    <a routerLink="/users" class="group block rounded-2xl border border-slate-200/80 bg-white p-6 shadow-card transition-all duration-200 hover:border-primary-200 hover:shadow-card-hover">
-      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-100 text-primary-600 transition-colors group-hover:bg-primary-500 group-hover:text-white">
-        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
+
+  <!-- Unique action buttons -->
+  <div class="grid gap-6 sm:grid-cols-2">
+    <a
+      routerLink="/products"
+      class="group relative overflow-hidden rounded-2xl border-2 border-electric-cyan/40 bg-theme-card/80 p-6 transition-all duration-300 hover:border-electric-cyan hover:shadow-glow-cyan"
+    >
+      <span class="absolute right-0 top-0 h-24 w-24 translate-x-6 -translate-y-6 rounded-full bg-electric-cyan/10 transition-transform group-hover:scale-150"></span>
+      <div class="relative flex items-start gap-4">
+        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-electric-cyan/20 text-electric-cyan transition-colors group-hover:bg-electric-cyan/30">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+          </svg>
+        </span>
+        <div>
+          <h3 class="font-display text-xl font-semibold text-theme-cream">Browse products</h3>
+          <p class="mt-1 text-sm text-theme-muted">View and manage your catalog in a table.</p>
+          <span class="mt-3 inline-flex items-center gap-1 text-sm font-medium text-electric-cyan">
+            Open list
+            <svg class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </span>
+        </div>
       </div>
-      <h3 class="mt-4 font-semibold text-slate-900">Users</h3>
-      <p class="mt-1 text-sm text-slate-600">View and manage your users with full CRUD.</p>
     </a>
-    <a routerLink="/users/new" class="group block rounded-2xl border border-slate-200/80 bg-white p-6 shadow-card transition-all duration-200 hover:border-primary-200 hover:shadow-card-hover">
-      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 transition-colors group-hover:bg-emerald-500 group-hover:text-white">
-        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-        </svg>
+
+    <a
+      routerLink="/products/new"
+      class="group relative overflow-hidden rounded-2xl border-2 border-kiwi/50 bg-gradient-to-br from-kiwi/5 to-electric-cyan/5 p-6 transition-all duration-300 hover:border-kiwi hover:shadow-glow-kiwi"
+    >
+      <span class="absolute bottom-0 left-0 h-20 w-20 -translate-x-4 translate-y-4 rounded-full bg-kiwi/10 transition-transform group-hover:scale-150"></span>
+      <div class="relative flex items-start gap-4">
+        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-kiwi/20 text-kiwi transition-colors group-hover:bg-kiwi/30">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+        </span>
+        <div>
+          <h3 class="font-display text-xl font-semibold text-theme-cream">Add new product</h3>
+          <p class="mt-1 text-sm text-theme-muted">Create a new product in the catalog.</p>
+          <span class="mt-3 inline-flex items-center gap-1 text-sm font-medium text-kiwi">
+            Create
+            <svg class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </span>
+        </div>
       </div>
-      <h3 class="mt-4 font-semibold text-slate-900">Add User</h3>
-      <p class="mt-1 text-sm text-slate-600">Create a new user in the system.</p>
     </a>
   </div>
 </div>

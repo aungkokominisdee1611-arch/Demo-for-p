@@ -1,31 +1,46 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{html,ts}",
-  ],
+  content: ['./src/**/*.{html,ts}'],
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Outfit', 'system-ui', 'sans-serif'],
+        display: ['Outfit', 'system-ui', 'sans-serif'],
       },
       colors: {
-        primary: {
-          50: '#eef2ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#312e81',
+        kiwi: {
+          DEFAULT: '#9FE870',
+          light: '#B8F090',
+          bright: '#7ED957',
+          dark: '#5CB83B',
+        },
+        electric: {
+          cyan: '#22D3EE',
+          cyanBright: '#00E5FF',
+          blue: '#0F172A',
+          surface: '#1E293B',
+          card: '#1E3A5F',
+          deep: '#0C4A6E',
+        },
+        // Semantic aliases for theme
+        theme: {
+          bg: '#0F172A',
+          surface: '#1E293B',
+          card: '#1E3A5F',
+          cream: '#F0FDF4',
+          muted: '#94A3B8',
+          green: '#9FE870',
+          cyan: '#22D3EE',
         },
       },
+      borderRadius: {
+        'xl': '1rem',
+        '2xl': '1.25rem',
+        '3xl': '1.5rem',
+      },
       boxShadow: {
-        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
-        'card': '0 1px 3px rgba(0,0,0,0.08)',
-        'card-hover': '0 4px 12px rgba(0,0,0,0.1)',
+        'glow-kiwi': '0 0 20px rgba(159, 232, 112, 0.3)',
+        'glow-cyan': '0 0 20px rgba(34, 211, 238, 0.3)',
       },
     },
   },

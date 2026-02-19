@@ -1,41 +1,62 @@
 <aside
-  class="flex flex-col bg-gradient-to-b from-slate-900 to-slate-800 text-white shadow-xl transition-all duration-300 ease-in-out"
-  [class.w-64]="!isCollapsed"
+  class="flex min-h-screen flex-col border-r border-electric-cyan/20 bg-theme-surface/95 backdrop-blur transition-all duration-300"
+  [class.w-64 ]="!isCollapsed"
   [class.w-20]="isCollapsed"
 >
-  <div class="flex h-16 items-center justify-between border-b border-white/10 px-4">
-    <span *ngIf="!isCollapsed" class="text-lg font-semibold tracking-tight">Demo App</span>
+  <div
+    class="flex h-16 items-center justify-between border-b border-electric-cyan/20 px-4"
+  >
+    <div *ngIf="!isCollapsed" class="flex items-center gap-3">
+      <span class="font-display text-lg font-bold tracking-tight text-kiwi"
+        >Demo</span
+      >
+    </div>
     <button
       type="button"
       (click)="toggleSidebar()"
-      class="rounded-lg p-2.5 text-slate-400 transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-primary-400/50"
+      class="rounded-lg p-2 text-theme-muted transition-colors hover:bg-kiwi/10 hover:text-kiwi focus:outline-none focus:ring-2 focus:ring-kiwi"
       [attr.aria-label]="isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
     >
       <svg
-        class="h-5 w-5 transition-transform duration-200"
+        class="h-5 w-5 transition-transform duration-300"
         [class.rotate-180]="isCollapsed"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
       >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
+        />
       </svg>
     </button>
   </div>
-  <nav class="flex-1 space-y-0.5 overflow-y-auto p-3">
+  <nav class="flex-1 space-y-1 overflow-y-auto p-3">
     <a
       *ngFor="let item of navItems"
       [routerLink]="item.path"
-      routerLinkActive="bg-primary-500/20 text-white ring-1 ring-primary-400/30"
-      [routerLinkActiveOptions]="{ exact: item.path === '/' }"
-      class="flex items-center gap-3 rounded-xl px-3 py-3 text-slate-400 transition-all duration-200 hover:bg-white/5 hover:text-white"
+      routerLinkActive="sidebar-active"
+      [routerLinkActiveOptions]="{ exact: item.exact }"
+      class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-theme-muted transition-all hover:bg-electric-cyan/10 hover:text-electric-cyan"
     >
-      <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/5">
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="item.icon" />
-        </svg>
-      </span>
-      <span *ngIf="!isCollapsed" class="truncate font-medium">{{ item.label }}</span>
+      <svg
+        class="h-5 w-5 shrink-0"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          [attr.d]="item.icon"
+        />
+      </svg>
+      <span *ngIf="!isCollapsed" class="truncate font-medium">{{
+        item.label
+      }}</span>
     </a>
   </nav>
 </aside>

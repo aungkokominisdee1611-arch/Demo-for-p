@@ -1,0 +1,69 @@
+:host {
+  display: block;
+}
+
+/* Table column spacing – consistent padding */
+.products-table__th,
+.products-table__td {
+  padding: 1rem 1.25rem;
+  vertical-align: middle;
+}
+
+.products-table__th {
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.products-table__th--actions {
+  text-align: right;
+}
+
+/* Column widths for a balanced layout */
+.products-table__th--img,
+.products-table__td--img {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.products-table__th--name,
+.products-table__td--name {
+  min-width: 140px;
+  max-width: 200px;
+}
+
+.products-table__th--desc,
+.products-table__td--desc {
+  min-width: 160px;
+  max-width: 280px;
+}
+
+.products-table__th--cat,
+.products-table__td--cat {
+  white-space: nowrap;
+}
+
+.products-table__th--price,
+.products-table__td--price {
+  white-space: nowrap;
+}
+
+.products-table__th--actions,
+.products-table__td--actions {
+  width: 1%;
+  white-space: nowrap;
+}
+
+/* Description: clamp to 2 lines, ellipsis; full text on hover via [title]
+.product-desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  max-width: 100%;
+} */

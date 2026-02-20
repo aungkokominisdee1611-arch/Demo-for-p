@@ -1,0 +1,33 @@
+:host {
+  display: block;
+}
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-box {
+  background: var(--theme-card, #1e1e2f);
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 1000px;
+  max-width: 95%;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  background: transparent;
+  border: none;
+  color: var(--theme-cream, #fff);
+  cursor: pointer;
+}

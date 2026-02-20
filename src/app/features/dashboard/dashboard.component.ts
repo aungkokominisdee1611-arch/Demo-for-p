@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit {
         this.productsCount = products.length;
         this.loading = false;
       },
-      () => (this.loading = false)
+      () => (this.loading = false),
     );
   }
 }

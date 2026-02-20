@@ -4,6 +4,7 @@ import {
   Product,
   ProductCreateUpdate,
   Category,
+  CategoryResponse,
 } from '../models/product.model';
 import { ServiceUrl } from 'src/assets/app.config';
 
@@ -14,6 +15,7 @@ export class ProductService {
   private readonly edit = ServiceUrl.edit;
   private readonly deletes = ServiceUrl.delete;
   private readonly category = ServiceUrl.category;
+  private readonly createC = ServiceUrl.cc;
 
   constructor(private _http: HttpClient) {}
 
@@ -38,5 +40,9 @@ export class ProductService {
   }
   getCategoriesFunction() {
     return this._http.get<Category[]>(this.category);
+  }
+
+  createCategory(body: { name: string }) {
+    return this._http.post<CategoryResponse>(this.createC, body);
   }
 }

@@ -20,3 +20,9 @@ export interface Category {
   id: number;
   name: string;
 }
+export interface CategoryResponse {
+  success: boolean;
+  message: string;
+  code: number;
+  data: Category;
+}

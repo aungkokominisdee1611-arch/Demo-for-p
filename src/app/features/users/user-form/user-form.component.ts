@@ -10,8 +10,7 @@ import { ProductService } from '../../../services/product.service';
   styleUrls: ['./user-form.component.css'],
 })
 export class UserFormComponent implements OnInit {
-  @Input() showModal: boolean = true; // <--- Add this property
-
+  @Input() showModal: boolean = true;
   name = '';
   price: number | null = null;
   categoryId: number | null = null;
@@ -113,7 +112,5 @@ export class UserFormComponent implements OnInit {
     this.showModal = false;
 
     this.router.navigate(['/products']);
-    // Optional: if using sidebar emit, you can also emit event to parent
-    // this.addProduct.emit();
   }
 }

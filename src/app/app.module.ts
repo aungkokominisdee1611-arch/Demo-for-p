@@ -11,6 +11,7 @@ import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { UserListComponent } from './features/users/user-list/user-list.component';
 import { UserFormComponent } from './features/users/user-form/user-form.component';
 import { UserDetailComponent } from './features/users/user-detail/user-detail.component';
+import { CategoryComponent } from './features/users/category/category.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { UserDetailComponent } from './features/users/user-detail/user-detail.co
     UserListComponent,
     UserFormComponent,
     UserDetailComponent,
+    CategoryComponent,
   ],
   imports: [
     BrowserModule,

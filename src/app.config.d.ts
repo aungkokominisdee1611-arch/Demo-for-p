@@ -4,5 +4,7 @@ declare module 'src/assets/app.config' {
     create: string;
     edit: string;
     delete: string;
+    category: string;
+    cc: string;
   };
 }

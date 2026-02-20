@@ -3,6 +3,7 @@ export interface Product {
   name: string;
   price: number;
   category: string;
+  categoryId?: number;
   isDiscount: boolean;
   stock: number;
 }
@@ -10,7 +11,12 @@ export interface Product {
 export interface ProductCreateUpdate {
   name: string;
   price: number;
-  category: string;
+  categoryId: number;
   isDiscount: boolean;
   stock: number;
+}
+
+export interface Category {
+  id: number;
+  name: string;
 }

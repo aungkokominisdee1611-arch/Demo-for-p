@@ -1,6 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Product, ProductCreateUpdate } from '../models/product.model';
+import {
+  Product,
+  ProductCreateUpdate,
+  Category,
+} from '../models/product.model';
 import { ServiceUrl } from 'src/assets/app.config';
 
 @Injectable({ providedIn: 'root' })
@@ -9,6 +13,7 @@ export class ProductService {
   private readonly create = ServiceUrl.create;
   private readonly edit = ServiceUrl.edit;
   private readonly deletes = ServiceUrl.delete;
+  private readonly category = ServiceUrl.category;
 
   constructor(private _http: HttpClient) {}
 
@@ -30,5 +35,8 @@ export class ProductService {
 
   deleteProductFunction(params: any) {
     return this._http.delete(`${this.deletes}/${params}`);
+  }
+  getCategoriesFunction() {
+    return this._http.get<Category[]>(this.category);
   }
 }

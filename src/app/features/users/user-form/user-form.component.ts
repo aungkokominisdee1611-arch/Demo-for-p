@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductCreateUpdate } from '../../../models/product.model';
+import { ProductCreateUpdate, Category } from '../../../models/product.model';
 import { ProductService } from '../../../services/product.service';
 
 @Component({
@@ -10,20 +10,26 @@ import { ProductService } from '../../../services/product.service';
   styleUrls: ['./user-form.component.css'],
 })
 export class UserFormComponent implements OnInit {
+  @Input() showModal: boolean = true; // <--- Add this property
+
   name = '';
   price: number | null = null;
-  category = '';
+  categoryId: number | null = null;
   isDiscount = false;
   stock = 0;
+
+  categories: Category[] = [];
+
   isEdit = false;
   errorMessage: string | null = null;
   submitting = false;
+
   private productId: number | null = null;
 
   constructor(
     private productService: ProductService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
@@ -31,55 +37,83 @@ export class UserFormComponent implements OnInit {
     if (id) {
       this.productId = +id;
       this.isEdit = true;
-      this.productService.getProductByIdFunction(this.productId).subscribe(
-        (product) => {
-          this.name = product.name;
-          this.price = product.price;
-          this.category = product.category;
-          this.isDiscount = product.isDiscount;
-          this.stock = product.stock ?? 0;
-        },
-        (err) => console.error('Load product failed', err)
-      );
     }
+
+    this.productService.getCategoriesFunction().subscribe({
+      next: (cats) => {
+        this.categories = cats;
+
+        if (this.isEdit && this.productId !== null) {
+          this.productService.getProductByIdFunction(this.productId).subscribe(
+            (product) => {
+              this.name = product.name;
+              this.price = product.price;
+              this.isDiscount = product.isDiscount;
+              this.stock = product.stock ?? 0;
+
+              const found = this.categories.find(
+                (c) =>
+                  c.id === product.categoryId || c.name === product.category,
+              );
+
+              this.categoryId = found ? found.id : null;
+            },
+            (err) => {
+              console.error('Failed to load product', err);
+            },
+          );
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load categories', err);
+      },
+    });
   }
 
   onSubmit() {
-    const p = this.price ?? 0;
-    if (!this.name.trim()) return;
-    this.errorMessage = null;
+    if (!this.name.trim() || !this.categoryId) return;
+
     this.submitting = true;
+    this.errorMessage = null;
+
     const body: ProductCreateUpdate = {
       name: this.name.trim(),
-      price: p,
-      category: this.category.trim() || 'general',
+      price: this.price ?? 0,
+      categoryId: this.categoryId,
       isDiscount: this.isDiscount,
       stock: this.stock,
     };
+
     const nav = () => {
       this.submitting = false;
-      this.router.navigate(['/products']);
+      this.closeModal();
     };
+
     if (this.isEdit && this.productId !== null) {
-      this.productService.updateProductFunction(this.productId, body).subscribe(
-        nav,
-        (err) => {
+      this.productService
+        .updateProductFunction(this.productId, body)
+        .subscribe(nav, (err) => {
           this.submitting = false;
-          this.errorMessage = err?.error?.message || 'Failed to update product.';
-        }
-      );
+          this.errorMessage =
+            err?.error?.message || 'Failed to update product.';
+        });
     } else {
-      this.productService.createProductFunction(body).subscribe(
-        nav,
-        (err) => {
-          this.submitting = false;
-          this.errorMessage = err?.error?.message || 'Failed to create product.';
-        }
-      );
+      this.productService.createProductFunction(body).subscribe(nav, (err) => {
+        this.submitting = false;
+        this.errorMessage = err?.error?.message || 'Failed to create product.';
+      });
     }
   }
 
   onCancel() {
+    this.closeModal();
+  }
+
+  private closeModal() {
+    this.showModal = false;
+
     this.router.navigate(['/products']);
+    // Optional: if using sidebar emit, you can also emit event to parent
+    // this.addProduct.emit();
   }
 }

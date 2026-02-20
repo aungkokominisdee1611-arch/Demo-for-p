@@ -1,3 +1,86 @@
 :host {
   display: block;
+  font-family: "Inter", sans-serif;
+}
+
+/* Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal box */
+.modal-box {
+  background: var(--theme-card, #1e1e2f);
+  padding: 2rem 3rem;
+  border-radius: 1.5rem;
+  width: 1000px; /* large width */
+  max-width: 95%; /* responsive on smaller screens */
+  height: auto; /* adjust height to content */
+  max-height: 80vh; /* prevent too tall */
+  position: relative;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Scrollable content if content is too big */
+.modal-box .modal-content {
+  overflow-y: auto;
+  max-height: 70vh;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  background: transparent;
+  border: none;
+  color: var(--theme-cream, #fff);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.close-btn:hover {
+  transform: scale(1.2);
+  color: var(--kiwi, #6bd26b);
+}
+
+/* Smooth animations */
+.modal-overlay,
+.modal-box {
+  animation:
+    fadeIn 0.2s ease-in-out,
+    scaleIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

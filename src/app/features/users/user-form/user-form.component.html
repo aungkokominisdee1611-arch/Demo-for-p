@@ -1,132 +1,166 @@
-<div class="modal-overlay" *ngIf="showModal">
-  <div class="modal-box">
-    <button type="button" class="close-btn" (click)="onCancel()">×</button>
+<ng-template #productModal>
+  <div class="relative w-full max-w-2xl bg-theme-card p-8">
+    <!-- Loading Overlay -->
+    <div *ngIf="isLoading" class="absolute inset-0 z-10 flex items-center justify-center bg-theme-card/80">
+      <div class="h-12 w-12 animate-spin rounded-full border-4 border-electric-cyan border-t-transparent"></div>
+    </div>
 
-    <div class="p-6 sm:p-8">
-      <div
-        *ngIf="errorMessage"
-        class="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400"
-      >
-        {{ errorMessage }}
+    <!-- Close Button -->
+    <button
+      type="button"
+      [disabled]="isLoading"
+      class="absolute right-5 top-5 text-2xl text-theme-muted hover:text-electric-cyan"
+      (click)="onCancel()"
+    >
+      ×
+    </button>
+
+    <!-- Header -->
+    <h2 class="font-display text-3xl font-bold text-kiwi mb-2">
+      {{ isEdit ? 'Edit Product' : 'Add Product' }}
+    </h2>
+    <p class="text-theme-muted mb-8">
+      {{ isEdit ? 'Update an existing product.' : 'Create a new product in your catalog.' }}
+    </p>
+
+    <!-- Error Message -->
+    <div
+      *ngIf="errorMessage && !isLoading"
+      class="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400"
+    >
+      {{ errorMessage }}
+    </div>
+
+    <!-- Form -->
+    <form *ngIf="!isLoading" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Name -->
+      <div>
+        <label class="block text-sm font-medium text-theme-muted mb-2">
+          Product Name
+        </label>
+        <input
+          type="text"
+          [(ngModel)]="name"
+          name="name"
+          required
+          class="w-full rounded-xl border border-electric-cyan/30 bg-theme-bg px-4 py-3 text-theme-cream focus:border-electric-cyan focus:outline-none"
+        />
       </div>
 
-      <div class="mx-auto max-w-4xl">
-        <!-- Title -->
-        <h1 class="font-display text-3xl font-bold tracking-tight text-kiwi">
-          {{ isEdit ? "Edit Product" : "Add Product" }}
-        </h1>
-        <p class="mt-1 text-theme-muted">
-          {{ isEdit ? "Update product details" : "Create a new product" }}
-        </p>
+      <!-- Price -->
+      <div>
+        <label class="block text-sm font-medium text-theme-muted mb-2">
+          Price
+        </label>
+        <input
+          type="number"
+          [(ngModel)]="price"
+          name="price"
+          class="w-full rounded-xl border border-electric-cyan/30 bg-theme-bg px-4 py-3 text-theme-cream focus:border-electric-cyan focus:outline-none"
+        />
+      </div>
 
-        <!-- Form -->
-        <form
-          (ngSubmit)="onSubmit()"
-          class="mt-8 rounded-2xl border border-electric-cyan/20 bg-theme-card/80 p-6 shadow-lg sm:p-8"
+      <!-- Category -->
+      <div>
+        <label class="block text-sm font-medium text-theme-muted mb-2">
+          Category
+        </label>
+        <select
+          [(ngModel)]="categoryId"
+          name="categoryId"
+          required
+          class="w-full rounded-xl border border-electric-cyan/30 bg-theme-bg px-4 py-3 text-theme-cream focus:border-electric-cyan focus:outline-none"
         >
-          <div class="space-y-6">
-            <!-- Name -->
-            <div>
-              <label
-                for="name"
-                class="block text-sm font-semibold text-theme-cream"
-                >Name</label
-              >
-              <input
-                id="name"
-                type="text"
-                [(ngModel)]="name"
-                name="name"
-                required
-                placeholder="Product name"
-                class="mt-2 block w-full rounded-xl border border-electric-cyan/30 bg-theme-surface px-4 py-3 text-theme-cream placeholder-theme-muted focus:border-kiwi focus:outline-none focus:ring-2 focus:ring-kiwi/50"
-              />
-            </div>
+          <option [ngValue]="null">Select category</option>
+          <option *ngFor="let cat of categories" [ngValue]="cat.id">
+            {{ cat.name }}
+          </option>
+        </select>
+      </div>
 
-            <!-- Price -->
-            <div>
-              <label
-                for="price"
-                class="block text-sm font-semibold text-theme-cream"
-                >Price</label
-              >
-              <input
-                id="price"
-                type="number"
-                [(ngModel)]="price"
-                name="price"
-                min="0"
-                step="0.01"
-                placeholder="0.00"
-                class="mt-2 block w-full rounded-xl border border-electric-cyan/30 bg-theme-surface px-4 py-3 text-theme-cream placeholder-theme-muted focus:border-kiwi focus:outline-none focus:ring-2 focus:ring-kiwi/50"
-              />
-            </div>
+      <!-- Stock -->
+      <div>
+        <label class="block text-sm font-medium text-theme-muted mb-2">
+          Stock
+        </label>
+        <input
+          type="number"
+          [(ngModel)]="stock"
+          name="stock"
+          class="w-full rounded-xl border border-electric-cyan/30 bg-theme-bg px-4 py-3 text-theme-cream focus:border-electric-cyan focus:outline-none"
+        />
+      </div>
 
-            <!-- Category -->
-            <div>
-              <label
-                for="category"
-                class="block text-sm font-semibold text-theme-cream"
-                >Category</label
-              >
-              <select
-                id="category"
-                [(ngModel)]="categoryId"
-                name="categoryId"
-                required
-                class="mt-2 block w-full rounded-xl border border-electric-cyan/30 bg-theme-surface px-4 py-3 text-theme-cream focus:border-kiwi focus:outline-none focus:ring-2 focus:ring-kiwi/50"
-              >
-                <option [ngValue]="null" disabled>Select category</option>
-                <option *ngFor="let cat of categories" [ngValue]="cat.id">
-                  {{ cat.name }}
-                </option>
-              </select>
-            </div>
+      <!-- Discount -->
+      <div class="flex items-center gap-3">
+        <input
+          type="checkbox"
+          [(ngModel)]="isDiscount"
+          name="isDiscount"
+          class="h-5 w-5 rounded border-electric-cyan text-electric-cyan focus:ring-electric-cyan"
+        />
+        <label class="text-theme-muted text-sm"> Discount available </label>
+      </div>
 
-            <!-- Stock -->
-            <div>
-              <label
-                for="stock"
-                class="block text-sm font-semibold text-theme-cream"
-                >Stock</label
-              >
-              <input
-                id="stock"
-                type="number"
-                [(ngModel)]="stock"
-                name="stock"
-                min="0"
-                placeholder="0"
-                class="mt-2 block w-full rounded-xl border border-electric-cyan/30 bg-theme-surface px-4 py-3 text-theme-cream placeholder-theme-muted focus:border-kiwi focus:outline-none focus:ring-2 focus:ring-kiwi/50"
-              />
-            </div>
+      <!-- Submit -->
+      <button
+        type="submit"
+        [disabled]="submitting"
+        class="w-full rounded-xl bg-kiwi py-3 font-semibold text-black transition hover:bg-kiwi/80 disabled:opacity-50"
+      >
+        {{ submitting ? (isEdit ? 'Updating...' : 'Creating...') : (isEdit ? 'Update Product' : 'Create Product') }}
+      </button>
+    </form>
+  </div>
+</ng-template>
 
-            <!-- Discount Checkbox -->
-            <div class="flex items-center gap-3">
-              <input
-                id="isDiscount"
-                type="checkbox"
-                [(ngModel)]="isDiscount"
-                name="isDiscount"
-                class="h-4 w-4 rounded border-electric-cyan/30 text-kiwi focus:ring-kiwi"
-              />
-              <label
-                for="isDiscount"
-                class="text-sm font-semibold text-theme-cream"
-                >On discount</label
-              >
-            </div>
+<!-- <ng-template #categoryModal>
+  <div class="modal-overlay">
+    <div class="modal-box">
+      <button type="button" class="close-btn" (click)="onCancel()">×</button>
+
+      <div class="p-6 sm:p-8">
+        <div
+          *ngIf="errorMessage"
+          class="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400"
+        >
+          {{ errorMessage }}
+        </div>
+
+        <h1
+          class="font-display text-3xl font-bold tracking-tight text-kiwi mb-2"
+        >
+          Add Category
+        </h1>
+        <p class="text-theme-muted mb-6">Create a new product category.</p>
+
+        <form (ngSubmit)="onSubmit()" class="space-y-6">
+          <div>
+            <label
+              for="name"
+              class="block text-sm font-semibold text-theme-cream"
+              >Category Name</label
+            >
+            <input
+              id="name"
+              type="text"
+              [(ngModel)]="name"
+              name="name"
+              required
+              placeholder="Electronics"
+              class="mt-2 block w-full rounded-xl border border-electric-cyan/30 bg-theme-surface px-4 py-3 text-theme-cream placeholder-theme-muted focus:border-kiwi focus:outline-none focus:ring-2 focus:ring-kiwi/50"
+            />
           </div>
 
-          <!-- Buttons -->
           <div class="mt-8 flex gap-3">
             <button
               type="submit"
               [disabled]="submitting"
               class="rounded-xl border-2 border-kiwi bg-kiwi/10 px-5 py-2.5 text-sm font-semibold text-kiwi transition-all hover:bg-kiwi/20 hover:shadow-glow-kiwi focus:outline-none focus:ring-2 focus:ring-kiwi focus:ring-offset-2 focus:ring-offset-theme-bg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {{ submitting ? "Saving…" : isEdit ? "Update" : "Create" }}
+              {{ submitting ? "Saving…" : "Create" }}
             </button>
+
             <button
               type="button"
               (click)="onCancel()"
@@ -139,4 +173,4 @@
       </div>
     </div>
   </div>
-</div>
+</ng-template> -->

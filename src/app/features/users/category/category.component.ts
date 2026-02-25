@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ProductService } from '../../../services/product.service';
 
 @Component({
@@ -8,7 +9,8 @@ import { ProductService } from '../../../services/product.service';
   styleUrls: ['./category.component.css'],
 })
 export class CategoryComponent {
-  showModal: boolean = true; // controls modal visibility
+  @ViewChild('categoryModal') categoryModal!: TemplateRef<any>;
+  dialogRef!: MatDialogRef<any>;
 
   name: string = '';
   submitting: boolean = false;
@@ -17,8 +19,23 @@ export class CategoryComponent {
   constructor(
     private productService: ProductService,
     private router: Router,
+    private dialog: MatDialog,
   ) {}
 
+  /** OPEN MODAL */
+  openModal() {
+    // Reset form
+    this.name = '';
+    this.submitting = false;
+    this.errorMessage = null;
+
+    this.dialogRef = this.dialog.open(this.categoryModal, {
+      width: '600px',
+      disableClose: true, // prevent clicking outside to close
+    });
+  }
+
+  /** SUBMIT FORM */
   onSubmit() {
     if (!this.name.trim()) return;
 
@@ -37,12 +54,15 @@ export class CategoryComponent {
     });
   }
 
+  /** CANCEL BUTTON */
   onCancel() {
     this.closeModal();
   }
 
-  private closeModal() {
-    this.showModal = false;
-    this.router.navigate(['']);
+  /** CLOSE MODAL */
+  closeModal() {
+    if (this.dialogRef) {
+      this.dialogRef.close();
+    }
   }
 }

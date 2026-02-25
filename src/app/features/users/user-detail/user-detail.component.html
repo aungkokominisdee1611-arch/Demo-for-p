@@ -1,28 +1,69 @@
 <div class="p-6 sm:p-8">
-  <div *ngIf="product" class="mx-auto max-w-3xl">
+  <div *ngIf="product; else notFound" class="mx-auto max-w-3xl">
+    <!-- Back Button -->
     <button
       type="button"
       (click)="onBack()"
       class="mb-6 inline-flex items-center gap-2 text-sm font-medium text-theme-muted transition-colors hover:text-kiwi"
     >
-      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      <svg
+        class="h-4 w-4"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 19l-7-7 7-7"
+        />
       </svg>
       Back to list
     </button>
-    <div class="overflow-hidden rounded-2xl border border-electric-cyan/20 bg-theme-card/80 shadow-lg">
+
+    <!-- Product Card -->
+    <div
+      class="overflow-hidden rounded-2xl border border-electric-cyan/20 bg-theme-card/80 shadow-lg"
+    >
       <div class="p-6 sm:p-8">
         <div class="flex items-start justify-between gap-4">
           <div>
-            <h1 class="font-display text-2xl font-bold text-theme-cream sm:text-3xl">{{ product.name }}</h1>
-            <p class="mt-3 text-2xl font-bold text-electric-cyan">${{ product.price }}</p>
+            <h1
+              class="font-display text-2xl font-bold text-theme-cream sm:text-3xl"
+            >
+              {{ product.name }}
+            </h1>
+
+            <p class="mt-3 text-2xl font-bold text-electric-cyan">
+              ${{ product.price }}
+            </p>
+
+            <!-- Product Tags -->
             <div class="mt-4 flex flex-wrap gap-3">
-              <span class="rounded-lg bg-electric-cyan/10 px-3 py-1.5 text-sm font-medium text-electric-cyan">Category: {{ product.category }}</span>
-              <span class="rounded-lg bg-electric-cyan/10 px-3 py-1.5 text-sm font-medium text-electric-cyan">Stock: {{ product.stock }}</span>
-              <span *ngIf="product.isDiscount" class="rounded-lg bg-kiwi/20 px-3 py-1.5 text-sm font-medium text-kiwi">On discount</span>
+              <span
+                class="rounded-lg bg-electric-cyan/10 px-3 py-1.5 text-sm font-medium text-electric-cyan"
+              >
+                Category: {{ product.category }}
+              </span>
+
+              <span
+                class="rounded-lg bg-electric-cyan/10 px-3 py-1.5 text-sm font-medium text-electric-cyan"
+              >
+                Stock: {{ product.stock }}
+              </span>
+
+              <span
+                *ngIf="product.isDiscount"
+                class="rounded-lg bg-kiwi/20 px-3 py-1.5 text-sm font-medium text-kiwi"
+              >
+                On discount
+              </span>
             </div>
           </div>
         </div>
+
+        <!-- Edit Button -->
         <div class="mt-8 border-t border-electric-cyan/20 pt-6">
           <button
             type="button"
@@ -35,20 +76,43 @@
       </div>
     </div>
   </div>
-  <div *ngIf="!product" class="mx-auto max-w-md rounded-2xl border border-electric-cyan/20 bg-theme-card/80 p-12 text-center">
-    <div class="mb-4 inline-flex rounded-full bg-red-500/10 p-4">
-      <svg class="h-10 w-10 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-      </svg>
-    </div>
-    <p class="font-semibold text-theme-cream">Product not found</p>
-    <p class="mt-1 text-sm text-theme-muted">The product you're looking for doesn't exist.</p>
-    <button
-      type="button"
-      (click)="onBack()"
-      class="mt-6 rounded-xl border-2 border-kiwi bg-kiwi/10 px-5 py-2.5 font-medium text-kiwi hover:bg-kiwi/20"
+
+  <!-- Not Found Template -->
+  <ng-template #notFound>
+    <div
+      class="mx-auto max-w-md rounded-2xl border border-electric-cyan/20 bg-theme-card/80 p-12 text-center"
     >
-      Back to list
-    </button>
-  </div>
+      <div class="mb-4 inline-flex rounded-full bg-red-500/10 p-4">
+        <svg
+          class="h-10 w-10 text-red-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
+        </svg>
+      </div>
+
+      <p class="font-semibold text-theme-cream">Product not found</p>
+
+      <p class="mt-1 text-sm text-theme-muted">
+        The product you're looking for doesn't exist.
+      </p>
+
+      <button
+        type="button"
+        (click)="onBack()"
+        class="mt-6 rounded-xl border-2 border-kiwi bg-kiwi/10 px-5 py-2.5 font-medium text-kiwi hover:bg-kiwi/20"
+      >
+        Back to list
+      </button>
+    </div>
+  </ng-template>
 </div>
+
+<app-edit-form #productForm (updated)="reloadProduct()"> </app-edit-form>

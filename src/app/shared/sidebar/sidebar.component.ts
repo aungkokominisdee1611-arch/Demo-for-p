@@ -10,11 +10,8 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class SidebarComponent {
   isCollapsed = false;
-
-  // Modal state
   showAddProductModal = false;
 
-  // Only real navigation items
   navItems = [
     {
       path: '/',
@@ -36,7 +33,6 @@ export class SidebarComponent {
     this.isCollapsed = !this.isCollapsed;
   }
 
-  // Optional: open modal if you want it triggered elsewhere
   openAddProductModal() {
     this.showAddProductModal = true;
   }

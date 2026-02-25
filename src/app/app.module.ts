@@ -12,6 +12,9 @@ import { UserListComponent } from './features/users/user-list/user-list.componen
 import { UserFormComponent } from './features/users/user-form/user-form.component';
 import { UserDetailComponent } from './features/users/user-detail/user-detail.component';
 import { CategoryComponent } from './features/users/category/category.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { EditFormComponent } from './features/users/edit-form/edit-form.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -23,12 +26,15 @@ import { CategoryComponent } from './features/users/category/category.component'
     UserFormComponent,
     UserDetailComponent,
     CategoryComponent,
+    EditFormComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../../../models/product.model';
 import { ProductService } from '../../../services/product.service';
+import { EditFormComponent } from '../edit-form/edit-form.component';
 
 @Component({
   selector: 'app-user-detail',
-  standalone: false,
   templateUrl: './user-detail.component.html',
   styleUrls: ['./user-detail.component.css'],
 })
 export class UserDetailComponent implements OnInit {
   product: Product | null = null;
+
+  @ViewChild('productForm') productForm!: EditFormComponent;
 
   constructor(
     private productService: ProductService,
@@ -18,20 +20,27 @@ export class UserDetailComponent implements OnInit {
     private route: ActivatedRoute,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.loadProduct();
+  }
+
+  loadProduct() {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.productService.getProductByIdFunction(+id).subscribe(
-        (data) => (this.product = data),
-        () => (this.product = null)
-      );
-    }
+    if (!id) return;
+
+    this.productService.getProductByIdFunction(+id).subscribe({
+      next: (data) => (this.product = data),
+      error: () => (this.product = null),
+    });
   }
 
   onEdit() {
-    if (this.product) {
-      this.router.navigate(['/products', this.product.id, 'edit']);
-    }
+    if (!this.product) return;
+    this.productForm.openModal(this.product.id);
+  }
+
+  reloadProduct() {
+    this.loadProduct();
   }
 
   onBack() {

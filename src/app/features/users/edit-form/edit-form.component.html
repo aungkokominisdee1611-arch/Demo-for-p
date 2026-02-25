@@ -1,0 +1,113 @@
+<ng-template #editModal>
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+  >
+    <div
+      class="relative w-full max-w-2xl rounded-3xl border border-electric-cyan/30 bg-theme-card p-8 shadow-2xl"
+    >
+      <!-- Close -->
+      <button
+        type="button"
+        class="absolute right-5 top-5 text-2xl text-theme-muted hover:text-electric-cyan"
+        (click)="onCancel()"
+      >
+        ×
+      </button>
+
+      <!-- Header -->
+      <h2 class="font-display text-3xl font-bold text-kiwi mb-2">
+        Edit Product
+      </h2>
+      <p class="text-theme-muted mb-8">Update product details.</p>
+
+      <!-- Error -->
+      <div
+        *ngIf="errorMessage"
+        class="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400"
+      >
+        {{ errorMessage }}
+      </div>
+
+      <!-- Form -->
+      <form #form="ngForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Name -->
+        <div>
+          <label class="block text-sm font-medium text-theme-muted mb-2">
+            Product Name
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="name"
+            name="name"
+            required
+            class="w-full rounded-xl border border-electric-cyan/30 bg-theme-bg px-4 py-3 text-theme-cream focus:border-electric-cyan focus:outline-none"
+          />
+        </div>
+
+        <!-- Price -->
+        <div>
+          <label class="block text-sm font-medium text-theme-muted mb-2">
+            Price
+          </label>
+          <input
+            type="number"
+            [(ngModel)]="price"
+            name="price"
+            class="w-full rounded-xl border border-electric-cyan/30 bg-theme-bg px-4 py-3 text-theme-cream focus:border-electric-cyan focus:outline-none"
+          />
+        </div>
+
+        <!-- Category -->
+        <div>
+          <label class="block text-sm font-medium text-theme-muted mb-2">
+            Category
+          </label>
+          <select
+            [(ngModel)]="categoryId"
+            name="categoryId"
+            required
+            class="w-full rounded-xl border border-electric-cyan/30 bg-theme-bg px-4 py-3 text-theme-cream focus:border-electric-cyan focus:outline-none"
+          >
+            <option [ngValue]="null">Select category</option>
+            <option *ngFor="let cat of categories" [ngValue]="cat.id">
+              {{ cat.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Stock -->
+        <div>
+          <label class="block text-sm font-medium text-theme-muted mb-2">
+            Stock
+          </label>
+          <input
+            type="number"
+            [(ngModel)]="stock"
+            name="stock"
+            class="w-full rounded-xl border border-electric-cyan/30 bg-theme-bg px-4 py-3 text-theme-cream focus:border-electric-cyan focus:outline-none"
+          />
+        </div>
+
+        <!-- Discount -->
+        <div class="flex items-center gap-3">
+          <input
+            type="checkbox"
+            [(ngModel)]="isDiscount"
+            name="isDiscount"
+            class="h-5 w-5 rounded border-electric-cyan text-electric-cyan"
+          />
+          <label class="text-theme-muted text-sm"> Discount available </label>
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          [disabled]="submitting || form.invalid"
+          class="w-full rounded-xl bg-electric-cyan py-3 font-semibold text-black transition hover:bg-electric-cyan/80 disabled:opacity-50"
+        >
+          {{ submitting ? "Updating..." : "Update Product" }}
+        </button>
+      </form>
+    </div>
+  </div>
+</ng-template>

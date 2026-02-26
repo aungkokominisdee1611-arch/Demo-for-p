@@ -10,228 +10,145 @@
       </h1>
       <p class="mt-1 text-theme-muted">Browse and manage your catalog</p>
     </div>
+
     <button
       type="button"
       (click)="openAddProduct()"
-      class="rounded-xl border-2 border-kiwi bg-kiwi/10 px-5 py-2.5 text-sm font-semibold text-kiwi transition-all hover:bg-kiwi/20 hover:shadow-glow-kiwi focus:outline-none focus:ring-2 focus:ring-kiwi focus:ring-offset-2 focus:ring-offset-theme-bg"
+      class="rounded-xl border-2 border-kiwi bg-kiwi/10 px-5 py-2.5 text-sm font-semibold text-kiwi transition-all hover:bg-kiwi/20"
     >
       + Add Product
     </button>
   </header>
 
-  <!-- Category filter -->
-  <div class="mb-6 flex flex-wrap items-center gap-3">
-    <span class="text-sm font-medium text-theme-muted">Category:</span>
-    <button
-      type="button"
-      (click)="clearCategoryFilter()"
-      class="rounded-lg border px-3 py-1.5 text-sm font-medium transition-all"
-      [ngClass]="
-        !categoryFilter
-          ? 'border-kiwi bg-kiwi/20 text-kiwi'
-          : 'border-electric-cyan/30 text-theme-muted hover:bg-electric-cyan/10 hover:text-electric-cyan'
-      "
-    >
-      All
-    </button>
-    <button
-      *ngFor="let cat of categories"
-      type="button"
-      (click)="setCategoryFilter(cat)"
-      class="rounded-lg border px-3 py-1.5 text-sm font-medium transition-all capitalize"
-      [ngClass]="
-        categoryFilter === cat
-          ? 'border-kiwi bg-kiwi/20 text-kiwi'
-          : 'border-electric-cyan/30 text-theme-muted hover:bg-electric-cyan/10 hover:text-electric-cyan'
-      "
-    >
-      {{ cat }}
-    </button>
-    <span *ngIf="categoryFilter" class="ml-2 text-sm text-theme-muted">
-      ({{ filteredProducts.length }}
-      {{ filteredProducts.length === 1 ? "result" : "results" }})
-    </span>
-  </div>
-
-  <!-- Table -->
   <div
     class="overflow-hidden rounded-2xl border border-electric-cyan/10 bg-theme-card/50 shadow-lg"
   >
     <div class="overflow-x-auto">
-      <table class="products-table min-w-full divide-y divide-electric-cyan/10">
+      <table class="min-w-full divide-y divide-electric-cyan/10">
         <thead>
           <tr class="bg-theme-surface/80">
-            <th
-              scope="col"
-              class="products-table__th products-table__th--name text-theme-muted"
-            >
-              Name
-            </th>
-            <th
-              scope="col"
-              class="products-table__th products-table__th--cat text-theme-muted"
-            >
-              Category
-            </th>
-            <th
-              scope="col"
-              class="products-table__th products-table__th--price text-theme-muted"
-            >
-              Price
-            </th>
-            <th
-              scope="col"
-              class="products-table__th products-table__th--stock text-theme-muted"
-            >
-              Stock
-            </th>
-            <th
-              scope="col"
-              class="products-table__th products-table__th--discount text-theme-muted"
-            >
-              Discount
-            </th>
-            <th
-              scope="col"
-              class="products-table__th products-table__th--actions text-theme-muted"
-            >
-              Actions
-            </th>
+            <th class="px-4 py-3 text-left text-theme-muted">Name</th>
+            <th class="px-4 py-3 text-left text-theme-muted">Category</th>
+            <th class="px-4 py-3 text-left text-theme-muted">Price</th>
+            <th class="px-4 py-3 text-left text-theme-muted">Stock</th>
+            <th class="px-4 py-3 text-left text-theme-muted">Discount</th>
+            <th class="px-4 py-3 text-right text-theme-muted">Actions</th>
           </tr>
         </thead>
+
         <tbody class="divide-y divide-electric-cyan/10">
           <tr
             *ngFor="let product of paginatedProducts"
             class="transition-colors hover:bg-electric-cyan/5"
           >
-            <td class="products-table__td products-table__td--name">
-              <span class="font-medium text-theme-cream">{{
-                product.name
-              }}</span>
+            <td class="px-4 py-3 text-theme-cream">
+              {{ product.name }}
             </td>
-            <td class="products-table__td products-table__td--cat">
+
+            <td class="px-4 py-3">
               <span
                 class="inline-block rounded-lg bg-electric-cyan/20 px-2.5 py-1 text-xs font-medium text-electric-cyan capitalize"
               >
                 {{ product.category }}
               </span>
             </td>
-            <td class="products-table__td products-table__td--price">
-              <span class="text-lg font-semibold text-kiwi"
-                >${{ product.price }}</span
-              >
+
+            <td class="px-4 py-3 text-kiwi font-semibold">
+              ${{ product.price }}
             </td>
-            <td class="products-table__td products-table__td--stock">
-              <span class="text-theme-cream">{{ product.stock }}</span>
+
+            <td class="px-4 py-3 text-theme-cream">
+              {{ product.stock }}
             </td>
-            <td class="products-table__td">
+
+            <td class="px-4 py-3">
               <span
                 *ngIf="product.isDiscount"
                 class="inline-block rounded-lg bg-green-200 px-2 py-1 text-xs font-medium text-green-800"
-                >Discount</span
               >
+                Discount
+              </span>
             </td>
-            <td class="products-table__td products-table__td--actions">
-              <div class="flex justify-end gap-2">
-                <button
-                  type="button"
-                  (click)="onView(product.id)"
-                  class="rounded-lg bg-electric-cyan/20 px-3 py-1.5 text-sm font-medium text-electric-cyan transition-colors hover:bg-electric-cyan/30"
-                >
-                  View
-                </button>
-                <!-- <button
-                  type="button"
-                  (click)="onEdit(product.id)"
-                  class="rounded-lg bg-kiwi/20 px-3 py-1.5 text-sm font-medium text-kiwi transition-colors hover:bg-kiwi/30"
-                >
-                  Edit
-                </button> -->
-                <button
-                  type="button"
-                  (click)="onDelete(product.id)"
-                  class="rounded-lg bg-red-500/20 px-3 py-1.5 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/30"
-                >
-                  Delete
-                </button>
-              </div>
+
+            <td class="px-4 py-3 text-right space-x-2">
+              <button
+                type="button"
+                (click)="onView(product.id)"
+                class="rounded-lg bg-electric-cyan/20 px-3 py-1.5 text-sm font-medium text-electric-cyan hover:bg-electric-cyan/30"
+              >
+                View
+              </button>
+
+              <button
+                type="button"
+                (click)="onEdit(product.id)"
+                class="rounded-lg bg-kiwi/20 px-3 py-1.5 text-sm font-medium text-kiwi hover:bg-kiwi/30"
+              >
+                Edit
+              </button>
+
+              <button
+                type="button"
+                (click)="onDelete(product.id)"
+                class="rounded-lg bg-red-500/20 px-3 py-1.5 text-sm font-medium text-red-400 hover:bg-red-500/30"
+              >
+                Delete
+              </button>
             </td>
           </tr>
-          <tr *ngIf="filteredProducts.length === 0">
-            <td colspan="5" class="products-table__td px-8 py-12 text-center">
-              <p class="text-theme-muted">
-                {{
-                  categoryFilter
-                    ? "No products in this category."
-                    : "No products yet. Add one to get started."
-                }}
-              </p>
-              <button
-                *ngIf="!categoryFilter"
-                type="button"
-                (click)="openAddProduct()"
-                class="mt-4 rounded-xl border-2 border-kiwi bg-kiwi/10 px-5 py-2.5 font-medium text-kiwi hover:bg-kiwi/20"
-              >
-                Add Product
-              </button>
-              <button
-                *ngIf="categoryFilter"
-                type="button"
-                (click)="clearCategoryFilter()"
-                class="mt-4 rounded-xl border border-electric-cyan/30 px-4 py-2 text-sm font-medium text-electric-cyan hover:bg-electric-cyan/10"
-              >
-                Clear filter
-              </button>
+
+          <!-- EMPTY STATE -->
+          <tr *ngIf="products.length === 0">
+            <td colspan="6" class="px-8 py-12 text-center text-theme-muted">
+              No products yet. Add one to get started.
             </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
-
-  <!-- Pagination -->
-  <footer
-    *ngIf="filteredProducts.length > pageSize"
-    class="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-electric-cyan/20 bg-theme-card/80 px-6 py-4"
-  >
-    <p class="text-sm text-theme-muted">
-      Showing {{ rangeStart }}–{{ rangeEnd }} of
-      {{ filteredProducts.length }} products
-    </p>
-    <div class="flex items-center gap-2">
-      <button
-        type="button"
-        (click)="prevPage()"
-        [disabled]="currentPage === 1"
-        class="rounded-lg border border-electric-cyan/30 bg-theme-surface px-4 py-2 text-sm font-medium text-theme-cream transition-colors hover:bg-electric-cyan/10 disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        ← Previous
-      </button>
-      <span class="flex items-center gap-1">
-        <button
-          *ngFor="let p of pageNumbers"
-          type="button"
-          (click)="goToPage(p)"
-          class="min-w-[2.5rem] rounded-lg border px-3 py-2 text-sm font-medium transition-all"
-          [ngClass]="
-            p === currentPage
-              ? 'border-kiwi bg-kiwi/20 text-kiwi'
-              : 'border-electric-cyan/30 text-theme-muted hover:bg-electric-cyan/10'
-          "
-        >
-          {{ p }}
-        </button>
-      </span>
-      <button
-        type="button"
-        (click)="nextPage()"
-        [disabled]="currentPage === totalPages"
-        class="rounded-lg border border-electric-cyan/30 bg-theme-surface px-4 py-2 text-sm font-medium text-theme-cream transition-colors hover:bg-electric-cyan/10 disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        Next →
-      </button>
-    </div>
-  </footer>
 </div>
-<app-user-form #productForm></app-user-form>
-<app-edit-form #editForm></app-edit-form>
+
+<footer
+  class="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-electric-cyan/20 bg-theme-card/80 mx-6 py-2 px-5"
+>
+  <p class="text-sm text-theme-muted pt-2">
+    Page {{ currentPage }} of {{ totalPages }}
+  </p>
+
+  <div class="flex items-center gap-2">
+    <button
+      type="button"
+      (click)="prevPage()"
+      [disabled]="currentPage === 1"
+      class="rounded-lg border border-electric-cyan/30 px-4 py-2 text-sm font-medium text-theme-cream hover:bg-electric-cyan/10 disabled:opacity-50"
+    >
+      ← Previous
+    </button>
+
+    <button
+      *ngFor="let p of pageNumbers"
+      type="button"
+      (click)="goToPage(p)"
+      class="min-w-[2.5rem] rounded-lg border px-3 py-2 text-sm font-medium transition-all"
+      [ngClass]="
+        p === currentPage
+          ? 'border-kiwi bg-kiwi/20 text-kiwi'
+          : 'border-electric-cyan/30 text-theme-muted hover:bg-electric-cyan/10'
+      "
+    >
+      {{ p }}
+    </button>
+
+    <button
+      type="button"
+      (click)="nextPage()"
+      [disabled]="currentPage === totalPages"
+      class="rounded-lg border border-electric-cyan/30 px-4 py-2 text-sm font-medium text-theme-cream hover:bg-electric-cyan/10 disabled:opacity-50"
+    >
+      Next →
+    </button>
+  </div>
+</footer>
+
+<app-user-form #productForm (updated)="loadProducts()"></app-user-form>

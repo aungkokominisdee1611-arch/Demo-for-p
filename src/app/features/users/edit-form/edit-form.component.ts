@@ -18,10 +18,8 @@ export class EditFormComponent {
   @ViewChild('editModal') editModal!: TemplateRef<any>;
   dialogRef!: MatDialogRef<any>;
 
-  // 🔥 Emit to parent when update success
   @Output() updated = new EventEmitter<boolean>();
 
-  // Form fields
   name: string = '';
   price: number | null = null;
   categoryId: number | null = null;

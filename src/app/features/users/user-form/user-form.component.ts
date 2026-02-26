@@ -1,7 +1,17 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  TemplateRef,
+  EventEmitter,
+  Output,
+} from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ProductCreateUpdate, Category } from '../../../models/product.model';
+import {
+  ProductCreateUpdate,
+  Category,
+  Product,
+} from '../../../models/product.model';
 import { ProductService } from '../../../services/product.service';
 
 @Component({
@@ -13,7 +23,8 @@ export class UserFormComponent implements OnInit {
   @ViewChild('productModal') productModal!: TemplateRef<any>;
   dialogRef!: MatDialogRef<any>;
 
-  // Form fields
+  @Output() updated = new EventEmitter<void>();
+
   name = '';
   price: number | null = null;
   categoryId: number | null = null;
@@ -31,19 +42,13 @@ export class UserFormComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private router: Router,
     private dialog: MatDialog,
   ) {}
 
-  ngOnInit() {
-    // Categories are loaded when modal opens
-  }
+  ngOnInit() {}
 
-  /** OPEN MODAL */
-  openModal(
-    isEditMode = false,
-    productId?: number,
-  ): MatDialogRef<any> | undefined {
+  // ================= OPEN MODAL =================
+  openModal(isEditMode = false, productId?: number) {
     this.isEdit = isEditMode;
     this.productId = productId ?? null;
 
@@ -57,48 +62,53 @@ export class UserFormComponent implements OnInit {
     this.submitting = false;
     this.categories = [];
 
-    // Open modal immediately
     this.dialogRef = this.dialog.open(this.productModal, {
       width: '600px',
       disableClose: true,
-      panelClass: 'custom-dialog-container',
     });
 
     this.isLoading = true;
+
+    // Load categories first
     this.productService.getCategoriesFunction().subscribe({
       next: (cats) => {
         this.categories = cats;
 
-        if (this.isEdit && this.productId !== null) {
-          this.productService
-            .getProductByIdFunction(this.productId)
-            .subscribe((product) => {
+        // If editing → load product
+        if (this.isEdit && this.productId) {
+          this.productService.getProductByIdFunction(this.productId).subscribe({
+            next: (product: Product) => {
               this.name = product.name;
               this.price = product.price;
               this.isDiscount = product.isDiscount;
               this.stock = product.stock ?? 0;
 
+              // 🔥 Convert category name → categoryId
               const found = this.categories.find(
-                (c) =>
-                  c.id === product.categoryId || c.name === product.category,
+                (c) => c.name === product.category,
               );
+
               this.categoryId = found ? found.id : null;
+
               this.isLoading = false;
-            });
+            },
+            error: () => {
+              this.errorMessage = 'Failed to load product.';
+              this.isLoading = false;
+            },
+          });
         } else {
           this.isLoading = false;
         }
       },
-      error: (err) => {
-        console.error('Failed to load categories', err);
-        this.errorMessage = 'Failed to load necessary data. Please try again.';
+      error: () => {
+        this.errorMessage = 'Failed to load categories.';
         this.isLoading = false;
       },
     });
-    return this.dialogRef;
   }
 
-  /** SUBMIT FORM */
+  // ================= SUBMIT =================
   onSubmit() {
     if (!this.name.trim() || !this.categoryId) return;
 
@@ -113,38 +123,41 @@ export class UserFormComponent implements OnInit {
       stock: this.stock,
     };
 
-    const onComplete = () => {
-      this.submitting = false;
-      this.closeModal();
-      // NOTE: We might want to emit an event here to notify the parent (dashboard) to refresh its data
-    };
-
-    const onError = (err: any) => {
-      this.submitting = false;
-      this.errorMessage =
-        err?.error?.message ||
-        (this.isEdit
-          ? 'Failed to update product.'
-          : 'Failed to create product.');
-    };
-
-    if (this.isEdit && this.productId !== null) {
+    if (this.isEdit && this.productId) {
       this.productService
         .updateProductFunction(this.productId, body)
-        .subscribe(onComplete, onError);
+        .subscribe({
+          next: () => this.handleSuccess(),
+          error: () => this.handleError(),
+        });
     } else {
-      this.productService
-        .createProductFunction(body)
-        .subscribe(onComplete, onError);
+      this.productService.createProductFunction(body).subscribe({
+        next: () => this.handleSuccess(),
+        error: () => this.handleError(),
+      });
     }
   }
 
-  /** CANCEL BUTTON */
+  private handleSuccess() {
+    this.submitting = false;
+
+    // 🔥 Tell parent to reload list
+    this.updated.emit();
+
+    this.closeModal();
+  }
+
+  private handleError() {
+    this.submitting = false;
+    this.errorMessage = this.isEdit
+      ? 'Failed to update product.'
+      : 'Failed to create product.';
+  }
+
   onCancel() {
     this.closeModal();
   }
 
-  /** CLOSE MODAL */
   closeModal() {
     if (this.dialogRef) {
       this.dialogRef.close();
